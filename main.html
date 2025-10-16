@@ -8,6 +8,10 @@
 <body>
 
   <div id="fb-root"></div>
+  
+    <div id="user-info" style="margin-top: 20px; font-family: Arial; color: #333;">
+    <p>Not logged in.</p>
+    </div>
 
   <!-- Facebook SDK Load -->
   <script>
@@ -35,18 +39,24 @@
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
-    // --- Helpers ---
-    function statusChangeCallback(response) {
-      console.log('Login status changed:', response);
 
-      if (response.status === 'connected') {
+    function statusChangeCallback(response) {
+        console.log('Login status changed:', response);
+
+        const userInfoDiv = document.getElementById('user-info');
+
+        if (response.status === 'connected') {
         FB.api('/me', {fields: 'name,email'}, function(user) {
-          alert('Hello, ' + user.name + '! (' + user.email + ')');
+            userInfoDiv.innerHTML = `
+            <p><strong>Name:</strong> ${user.name}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+            `;
         });
-      } else {
-        console.log('User not logged in or not authorized.');
-      }
+        } else {
+        userInfoDiv.innerHTML = `<p>User not logged in or not authorized.</p>`;
+        }
     }
+
 
     function checkLoginState() {
       FB.getLoginStatus(function(response) {
