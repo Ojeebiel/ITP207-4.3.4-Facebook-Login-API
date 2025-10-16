@@ -3,49 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Facebook Login Demo</title>
+  <title>Facebook Login Example</title>
 </head>
 <body>
 
   <div id="fb-root"></div>
-  <script async defer crossorigin="anonymous"
-    src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v24.0&appId=1746217372730761"></script>
 
-  <fb:login-button 
-    scope="public_profile,email"
-    onlogin="checkLoginState();">
-  </fb:login-button>
-
+  <!-- Facebook SDK Load -->
   <script>
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : '1746217372730761',
+        appId      : '1746217372730761',  // 👈 your app ID
         cookie     : true,
         xfbml      : true,
         version    : 'v24.0'
       });
 
       FB.AppEvents.logPageView();
+
+      // Check if user is already logged in
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
     };
+
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    // --- Helpers ---
+    function statusChangeCallback(response) {
+      console.log('Login status changed:', response);
+
+      if (response.status === 'connected') {
+        FB.api('/me', {fields: 'name,email'}, function(user) {
+          alert('Hello, ' + user.name + '! (' + user.email + ')');
+        });
+      } else {
+        console.log('User not logged in or not authorized.');
+      }
+    }
 
     function checkLoginState() {
       FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
       });
     }
-
-    function statusChangeCallback(response) {
-      console.log('Login status changed:', response);
-      if (response.status === 'connected') {
-        FB.api('/me', {fields: 'name,email'}, function(userInfo) {
-          alert(`Welcome ${userInfo.name}!`);
-          console.log('User info:', userInfo);
-        });
-      } else {
-        console.log('User not logged in or not authorized.');
-      }
-    }
   </script>
+
+  <!-- Facebook Login Button -->
+  <fb:login-button 
+    scope="public_profile,email"
+    onlogin="checkLoginState();">
+  </fb:login-button>
 
 </body>
 </html>
