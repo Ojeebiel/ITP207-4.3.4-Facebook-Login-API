@@ -13,11 +13,10 @@
     <p>Not logged in.</p>
     </div>
 
-  <!-- Facebook SDK Load -->
   <script>
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : '1746217372730761',  // 👈 your app ID
+        appId      : '1746217372730761',
         cookie     : true,
         xfbml      : true,
         version    : 'v24.0'
@@ -25,7 +24,6 @@
 
       FB.AppEvents.logPageView();
 
-      // Check if user is already logged in
       FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
       });
@@ -65,7 +63,6 @@
     }
   </script>
 
-  <!-- Facebook Login Button -->
   <fb:login-button 
     scope="public_profile,email"
     onlogin="checkLoginState();">
